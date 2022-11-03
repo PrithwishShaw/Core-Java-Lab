@@ -1,0 +1,827 @@
+Name: Prithwish Shaw
+Lab test: SQL
+Date: 03/11/2022
+
+
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| companyabc         |
+| employeesystem     |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sakila             |
+| sys                |
+| world              |
++--------------------+
+8 rows in set (0.01 sec)
+
+mysql> use companyabc;
+Database changed
+mysql> create table dept(
+    -> dno varchar(10) primary key,
+    -> dname varchar(30) not null,
+    -> location varchar(20));
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> describe dept;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| dno      | varchar(10) | NO   | PRI | NULL    |       |
+| dname    | varchar(30) | NO   |     | NULL    |       |
+| location | varchar(20) | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> create table project(
+    -> pno varchar(10) primary key not null,
+    -> pname varchar(25) not null,
+    -> budget float(10,2),
+    -> departmentId int,
+    -> foreign key(departmentId) references dept(dno));
+ERROR 3780 (HY000): Referencing column 'departmentId' and referenced column 'dno' in foreign key constraint 'project_ibfk_1' are incompatible.
+mysql> create table project(
+    -> pno varchar(10) primary key not null,
+    -> pname varchar(25) not null,
+    -> budget float(10,2),
+    -> departmentId varchar(10),
+    -> foreign key(departmentId) references dept(dno));
+Query OK, 0 rows affected, 1 warning (0.02 sec)
+
+mysql> create table emp(
+    -> eno int primary key not null,
+    -> ename varchar(20) not null,
+    -> salary float(10,2),
+    -> designation varchar(25) not null,
+    -> projectNo varchar(10),
+    -> foreign key(projectNo) references project(pno),
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 7
+mysql> create table emp(
+    -> eno int primary key not null,
+    -> ename varchar(20) not null,
+    -> salary float(10,2),
+    -> designation varchar(25) not null,
+    -> projectNo varchar(10),
+    -> foreign key(projectNo) references project(pno),
+    -> departmentNo varchar(10),
+    -> foreign key(departmentNo) references dept(dno));
+Query OK, 0 rows affected, 1 warning (0.04 sec)
+
+mysql> describe dept;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| dno      | varchar(10) | NO   | PRI | NULL    |       |
+| dname    | varchar(30) | NO   |     | NULL    |       |
+| location | varchar(20) | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> insert into dept values(
+    -> D01,"Sales","New Delhi");
+ERROR 1054 (42S22): Unknown column 'D01' in 'field list'
+mysql> insert into dept values(
+    -> "D01","Sales","New Delhi");
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from emp;
+Empty set (0.00 sec)
+
+mysql> select * from dept;
++-----+-------+-----------+
+| dno | dname | location  |
++-----+-------+-----------+
+| D01 | Sales | New Delhi |
++-----+-------+-----------+
+1 row in set (0.00 sec)
+
+mysql> insert into dept values(
+    -> "D02","Marketing","Mumbai");
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into dept values(
+    -> "D03","Finance","Chennai");
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from dept;
++-----+-----------+-----------+
+| dno | dname     | location  |
++-----+-----------+-----------+
+| D01 | Sales     | New Delhi |
+| D02 | Marketing | Mumbai    |
+| D03 | Finance   | Chennai   |
++-----+-----------+-----------+
+3 rows in set (0.00 sec)
+
+mysql> insert into project values(
+    -> "P01","Java Desktop",20000.54,"D01");
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from project;
++-----+--------------+----------+--------------+
+| pno | pname        | budget   | departmentId |
++-----+--------------+----------+--------------+
+| P01 | Java Desktop | 20000.54 | D01          |
++-----+--------------+----------+--------------+
+1 row in set (0.00 sec)
+
+mysql> insert into project values(
+    -> "P02","Java Web",40000.42,"D02");
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into project values(
+    -> "P03","PHP",33000.40,"D01");
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into project values(
+    -> "P04","Python",47000.24,"D03");
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into project values(
+    -> "P05","AWS",29000.45,"D03");
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from project;
++-----+--------------+----------+--------------+
+| pno | pname        | budget   | departmentId |
++-----+--------------+----------+--------------+
+| P01 | Java Desktop | 20000.54 | D01          |
+| P02 | Java Web     | 40000.42 | D02          |
+| P03 | PHP          | 33000.40 | D01          |
+| P04 | Python       | 47000.24 | D03          |
+| P05 | AWS          | 29000.45 | D03          |
++-----+--------------+----------+--------------+
+5 rows in set (0.00 sec)
+
+mysql> insert into emp values(
+    -> 101, "Prithwish", 54000.14,"Developer","P01","D03");
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from emp;
++-----+-----------+----------+-------------+-----------+--------------+
+| eno | ename     | salary   | designation | projectNo | departmentNo |
++-----+-----------+----------+-------------+-----------+--------------+
+| 101 | Prithwish | 54000.14 | Developer   | P01       | D03          |
++-----+-----------+----------+-------------+-----------+--------------+
+1 row in set (0.00 sec)
+
+mysql> insert into emp values(
+    -> 102, "Sonu", 45000.04,"Manager","P01","D03");
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into emp values(
+    -> 103, "Sweety", 65000.04,"Tester","P01","D03");
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into emp values(
+    -> 104, "Krishna", 74000.404,"Senior Developer","P02","D01");
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into emp values(
+    -> 105, "Sweta", 84000.20,"Manager","P02","D01");
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into emp values(
+    -> 106, "Roystan", 47000.12,"Quality Analyst","P02","D01");
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into emp values(
+    -> 107, "Ayan", 71000.45,"Manager","P01","D03");
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into emp values(
+    -> 108, "Disha", 90000.40,"Manager","P03","D02");
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into emp values(
+    -> 109, "Swapnil", 74120.5,"Senior Developer","P04","D03");
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into emp values(
+    -> 110, "Payal", 42000.45,"Testor","P05","D03");
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from emp;
++-----+-----------+----------+------------------+-----------+--------------+
+| eno | ename     | salary   | designation      | projectNo | departmentNo |
++-----+-----------+----------+------------------+-----------+--------------+
+| 101 | Prithwish | 54000.14 | Developer        | P01       | D03          |
+| 102 | Sonu      | 45000.04 | Manager          | P01       | D03          |
+| 103 | Sweety    | 65000.04 | Tester           | P01       | D03          |
+| 104 | Krishna   | 74000.40 | Senior Developer | P02       | D01          |
+| 105 | Sweta     | 84000.20 | Manager          | P02       | D01          |
+| 106 | Roystan   | 47000.12 | Quality Analyst  | P02       | D01          |
+| 107 | Ayan      | 71000.45 | Manager          | P01       | D03          |
+| 108 | Disha     | 90000.40 | Manager          | P03       | D02          |
+| 109 | Swapnil   | 74120.50 | Senior Developer | P04       | D03          |
+| 110 | Payal     | 42000.45 | Testor           | P05       | D03          |
++-----+-----------+----------+------------------+-----------+--------------+
+10 rows in set (0.00 sec)
+
+mysql> select * from emo
+    -> ;
+ERROR 1146 (42S02): Table 'companyabc.emo' doesn't exist
+mysql> select * from emp
+    -> from emp JOIN dept
+    -> where DepartmentNo=deptNo;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'from emp JOIN dept
+where DepartmentNo=deptNo' at line 2
+mysql> select e.name,e.designation,d.location
+    -> from emp e JOIN dept d
+    -> where e.departmentNo=d.deptNo;
+ERROR 1054 (42S22): Unknown column 'e.name' in 'field list'
+mysql> select e.ename,e.designation,d.location
+    -> from emp e JOIN dept d
+    -> where e.departmentNo=d.deptNo;
+ERROR 1054 (42S22): Unknown column 'd.deptNo' in 'where clause'
+mysql> select e.ename,e.designation,d.location
+    -> from emp e JOIN dept d
+    -> where e.departmentNo=d.dno;
++-----------+------------------+-----------+
+| ename     | designation      | location  |
++-----------+------------------+-----------+
+| Krishna   | Senior Developer | New Delhi |
+| Sweta     | Manager          | New Delhi |
+| Roystan   | Quality Analyst  | New Delhi |
+| Disha     | Manager          | Mumbai    |
+| Prithwish | Developer        | Chennai   |
+| Sonu      | Manager          | Chennai   |
+| Sweety    | Tester           | Chennai   |
+| Ayan      | Manager          | Chennai   |
+| Swapnil   | Senior Developer | Chennai   |
+| Payal     | Testor           | Chennai   |
++-----------+------------------+-----------+
+10 rows in set (0.00 sec)
+
+mysql> select e.ename,e.designation,d.location
+    -> from emp e JOIN dept d
+    -> ;
++-----------+------------------+-----------+
+| ename     | designation      | location  |
++-----------+------------------+-----------+
+| Prithwish | Developer        | Chennai   |
+| Prithwish | Developer        | Mumbai    |
+| Prithwish | Developer        | New Delhi |
+| Sonu      | Manager          | Chennai   |
+| Sonu      | Manager          | Mumbai    |
+| Sonu      | Manager          | New Delhi |
+| Sweety    | Tester           | Chennai   |
+| Sweety    | Tester           | Mumbai    |
+| Sweety    | Tester           | New Delhi |
+| Krishna   | Senior Developer | Chennai   |
+| Krishna   | Senior Developer | Mumbai    |
+| Krishna   | Senior Developer | New Delhi |
+| Sweta     | Manager          | Chennai   |
+| Sweta     | Manager          | Mumbai    |
+| Sweta     | Manager          | New Delhi |
+| Roystan   | Quality Analyst  | Chennai   |
+| Roystan   | Quality Analyst  | Mumbai    |
+| Roystan   | Quality Analyst  | New Delhi |
+| Ayan      | Manager          | Chennai   |
+| Ayan      | Manager          | Mumbai    |
+| Ayan      | Manager          | New Delhi |
+| Disha     | Manager          | Chennai   |
+| Disha     | Manager          | Mumbai    |
+| Disha     | Manager          | New Delhi |
+| Swapnil   | Senior Developer | Chennai   |
+| Swapnil   | Senior Developer | Mumbai    |
+| Swapnil   | Senior Developer | New Delhi |
+| Payal     | Testor           | Chennai   |
+| Payal     | Testor           | Mumbai    |
+| Payal     | Testor           | New Delhi |
++-----------+------------------+-----------+
+30 rows in set (0.00 sec)
+
+mysql> select * from emp
+    -> ;
++-----+-----------+----------+------------------+-----------+--------------+
+| eno | ename     | salary   | designation      | projectNo | departmentNo |
++-----+-----------+----------+------------------+-----------+--------------+
+| 101 | Prithwish | 54000.14 | Developer        | P01       | D03          |
+| 102 | Sonu      | 45000.04 | Manager          | P01       | D03          |
+| 103 | Sweety    | 65000.04 | Tester           | P01       | D03          |
+| 104 | Krishna   | 74000.40 | Senior Developer | P02       | D01          |
+| 105 | Sweta     | 84000.20 | Manager          | P02       | D01          |
+| 106 | Roystan   | 47000.12 | Quality Analyst  | P02       | D01          |
+| 107 | Ayan      | 71000.45 | Manager          | P01       | D03          |
+| 108 | Disha     | 90000.40 | Manager          | P03       | D02          |
+| 109 | Swapnil   | 74120.50 | Senior Developer | P04       | D03          |
+| 110 | Payal     | 42000.45 | Testor           | P05       | D03          |
++-----+-----------+----------+------------------+-----------+--------------+
+10 rows in set (0.00 sec)
+
+mysql> select e.ename,e.designation,d.location
+    -> from emp e JOIN dept d
+    -> where e.departmentNo=d.deptNo
+    -> where designation="Manager";
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'where designation="Manager"' at line 4
+mysql> select e.ename,e.designation,d.location
+    -> from emp e JOIN dept d
+    -> where designation="Manager";
++-------+-------------+-----------+
+| ename | designation | location  |
++-------+-------------+-----------+
+| Disha | Manager     | New Delhi |
+| Ayan  | Manager     | New Delhi |
+| Sweta | Manager     | New Delhi |
+| Sonu  | Manager     | New Delhi |
+| Disha | Manager     | Mumbai    |
+| Ayan  | Manager     | Mumbai    |
+| Sweta | Manager     | Mumbai    |
+| Sonu  | Manager     | Mumbai    |
+| Disha | Manager     | Chennai   |
+| Ayan  | Manager     | Chennai   |
+| Sweta | Manager     | Chennai   |
+| Sonu  | Manager     | Chennai   |
++-------+-------------+-----------+
+12 rows in set (0.00 sec)
+
+mysql> select e.ename,e.designation,d.location
+    -> from emp e JOIN dept d
+    -> where designation="Manager"
+    -> where e.departmentNo=d.deptNo;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'where e.departmentNo=d.deptNo' at line 4
+mysql> select e.ename,e.designation,d.location
+    -> from emp e dept d
+    -> where designation="Manager"
+    -> where e.departmentNo=d.dno;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'dept d
+where designation="Manager"
+where e.departmentNo=d.dno' at line 2
+mysql> select * from emp
+    -> where designation="Manager";
++-----+-------+----------+-------------+-----------+--------------+
+| eno | ename | salary   | designation | projectNo | departmentNo |
++-----+-------+----------+-------------+-----------+--------------+
+| 102 | Sonu  | 45000.04 | Manager     | P01       | D03          |
+| 105 | Sweta | 84000.20 | Manager     | P02       | D01          |
+| 107 | Ayan  | 71000.45 | Manager     | P01       | D03          |
+| 108 | Disha | 90000.40 | Manager     | P03       | D02          |
++-----+-------+----------+-------------+-----------+--------------+
+4 rows in set (0.00 sec)
+
+mysql> select e.ename, e.designation, e.location
+    -> from emp e
+    -> where designation="manager";
+ERROR 1054 (42S22): Unknown column 'e.location' in 'field list'
+mysql> select e.ename, e.designation, d.location
+    -> from emp e join dept d
+    -> where designation="manager";
++-------+-------------+-----------+
+| ename | designation | location  |
++-------+-------------+-----------+
+| Disha | Manager     | New Delhi |
+| Ayan  | Manager     | New Delhi |
+| Sweta | Manager     | New Delhi |
+| Sonu  | Manager     | New Delhi |
+| Disha | Manager     | Mumbai    |
+| Ayan  | Manager     | Mumbai    |
+| Sweta | Manager     | Mumbai    |
+| Sonu  | Manager     | Mumbai    |
+| Disha | Manager     | Chennai   |
+| Ayan  | Manager     | Chennai   |
+| Sweta | Manager     | Chennai   |
+| Sonu  | Manager     | Chennai   |
++-------+-------------+-----------+
+12 rows in set (0.00 sec)
+
+mysql> select e.ename, e.designation, e.location
+    -> from emp e dept d
+    -> where designation="manager";
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'dept d
+where designation="manager"' at line 2
+mysql> select e.ename, e.designation, d.location
+    -> from emp e join dept d
+    -> where designation="manager"
+    -> where depatmentNo=dno;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'where depatmentNo=dno' at line 4
+mysql> select d.location, e.ename
+    -> from dept d
+    -> join emp e
+    -> on(d.;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 4
+mysql> select * from emp
+    -> ;
++-----+-----------+----------+------------------+-----------+--------------+
+| eno | ename     | salary   | designation      | projectNo | departmentNo |
++-----+-----------+----------+------------------+-----------+--------------+
+| 101 | Prithwish | 54000.14 | Developer        | P01       | D03          |
+| 102 | Sonu      | 45000.04 | Manager          | P01       | D03          |
+| 103 | Sweety    | 65000.04 | Tester           | P01       | D03          |
+| 104 | Krishna   | 74000.40 | Senior Developer | P02       | D01          |
+| 105 | Sweta     | 84000.20 | Manager          | P02       | D01          |
+| 106 | Roystan   | 47000.12 | Quality Analyst  | P02       | D01          |
+| 107 | Ayan      | 71000.45 | Manager          | P01       | D03          |
+| 108 | Disha     | 90000.40 | Manager          | P03       | D02          |
+| 109 | Swapnil   | 74120.50 | Senior Developer | P04       | D03          |
+| 110 | Payal     | 42000.45 | Testor           | P05       | D03          |
++-----+-----------+----------+------------------+-----------+--------------+
+10 rows in set (0.00 sec)
+
+mysql> select * from emp
+    -> where designation="Manager"
+    -> where location="Mumbai";
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'where location="Mumbai"' at line 3
+mysql> select * from emp
+    -> where designation="Manager"
+    -> kk;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'kk' at line 3
+mysql> select * from emp
+    -> join dept
+    -> where designation="Manager"
+    -> where location="Mumbai";
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'where location="Mumbai"' at line 4
+mysql> select * from emp
+    -> where designation="Manager";
++-----+-------+----------+-------------+-----------+--------------+
+| eno | ename | salary   | designation | projectNo | departmentNo |
++-----+-------+----------+-------------+-----------+--------------+
+| 102 | Sonu  | 45000.04 | Manager     | P01       | D03          |
+| 105 | Sweta | 84000.20 | Manager     | P02       | D01          |
+| 107 | Ayan  | 71000.45 | Manager     | P01       | D03          |
+| 108 | Disha | 90000.40 | Manager     | P03       | D02          |
++-----+-------+----------+-------------+-----------+--------------+
+4 rows in set (0.00 sec)
+
+mysql> select * from emp
+    -> where designation="Manager"
+    -> join dept
+    -> where lcoation="Mumbai";
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'join dept
+where lcoation="Mumbai"' at line 3
+mysql> update emp e join dept d
+    -> set e.salary = e.salary+e.salary*10/100
+    -> where ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '' at line 3
+mysql> update emp e join project p
+    -> set e.salary = e.salary+e.salary*10/100
+    -> where p.budget>20000;
+Query OK, 10 rows affected (0.00 sec)
+Rows matched: 10  Changed: 10  Warnings: 0
+
+mysql> select * from emp;
++-----+-----------+----------+------------------+-----------+--------------+
+| eno | ename     | salary   | designation      | projectNo | departmentNo |
++-----+-----------+----------+------------------+-----------+--------------+
+| 101 | Prithwish | 59400.15 | Developer        | P01       | D03          |
+| 102 | Sonu      | 49500.04 | Manager          | P01       | D03          |
+| 103 | Sweety    | 71500.04 | Tester           | P01       | D03          |
+| 104 | Krishna   | 81400.44 | Senior Developer | P02       | D01          |
+| 105 | Sweta     | 92400.22 | Manager          | P02       | D01          |
+| 106 | Roystan   | 51700.13 | Quality Analyst  | P02       | D01          |
+| 107 | Ayan      | 78100.50 | Manager          | P01       | D03          |
+| 108 | Disha     | 99000.44 | Manager          | P03       | D02          |
+| 109 | Swapnil   | 81532.55 | Senior Developer | P04       | D03          |
+| 110 | Payal     | 46200.49 | Testor           | P05       | D03          |
++-----+-----------+----------+------------------+-----------+--------------+
+10 rows in set (0.00 sec)
+
+mysql> alter table project
+    -> add column hours needed;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'needed' at line 2
+mysql> alter table project
+    -> add hoursNeeded int;
+Query OK, 0 rows affected (0.02 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> describe project;
++--------------+-------------+------+-----+---------+-------+
+| Field        | Type        | Null | Key | Default | Extra |
++--------------+-------------+------+-----+---------+-------+
+| pno          | varchar(10) | NO   | PRI | NULL    |       |
+| pname        | varchar(25) | NO   |     | NULL    |       |
+| budget       | float(10,2) | YES  |     | NULL    |       |
+| departmentId | varchar(10) | YES  | MUL | NULL    |       |
+| hoursNeeded  | int         | YES  |     | NULL    |       |
++--------------+-------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> alter pname from project
+    -> rename to projectName;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'pname from project
+rename to projectName' at line 1
+mysql> alter table project
+    -> change column pname projectName(25);
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '(25)' at line 2
+mysql> alter table project
+    -> change column pname projectName varchar(25);
+Query OK, 0 rows affected (0.08 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> describe project;
++--------------+-------------+------+-----+---------+-------+
+| Field        | Type        | Null | Key | Default | Extra |
++--------------+-------------+------+-----+---------+-------+
+| pno          | varchar(10) | NO   | PRI | NULL    |       |
+| projectName  | varchar(25) | YES  |     | NULL    |       |
+| budget       | float(10,2) | YES  |     | NULL    |       |
+| departmentId | varchar(10) | YES  | MUL | NULL    |       |
+| hoursNeeded  | int         | YES  |     | NULL    |       |
++--------------+-------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> select * from epm
+    -> describe project;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'describe project' at line 2
+mysql> select * from emp
+    -> join dept
+    -> where designation="Java web"
+    -> where location="New Delhi";
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'where location="New Delhi"' at line 4
+mysql> select * from emp
+    -> join dept
+    -> where designation="Java web";
+Empty set (0.00 sec)
+
+mysql> where designation="Java web";
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'where designation="Java web"' at line 1
+mysql> select * from project
+    -> order by budget desc;
++-----+--------------+----------+--------------+-------------+
+| pno | projectName  | budget   | departmentId | hoursNeeded |
++-----+--------------+----------+--------------+-------------+
+| P04 | Python       | 47000.24 | D03          |        NULL |
+| P02 | Java Web     | 40000.42 | D02          |        NULL |
+| P03 | PHP          | 33000.40 | D01          |        NULL |
+| P05 | AWS          | 29000.45 | D03          |        NULL |
+| P01 | Java Desktop | 20000.54 | D01          |        NULL |
++-----+--------------+----------+--------------+-------------+
+5 rows in set (0.00 sec)
+
+mysql> select * from project
+    -> order by budget
+    -> ;
++-----+--------------+----------+--------------+-------------+
+| pno | projectName  | budget   | departmentId | hoursNeeded |
++-----+--------------+----------+--------------+-------------+
+| P01 | Java Desktop | 20000.54 | D01          |        NULL |
+| P05 | AWS          | 29000.45 | D03          |        NULL |
+| P03 | PHP          | 33000.40 | D01          |        NULL |
+| P02 | Java Web     | 40000.42 | D02          |        NULL |
+| P04 | Python       | 47000.24 | D03          |        NULL |
++-----+--------------+----------+--------------+-------------+
+5 rows in set (0.00 sec)
+
+mysql> select * from project
+    -> join dept
+    -> order by budget
+    -> where location= "chennai";
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'where location= "chennai"' at line 4
+mysql> select p.budget, l.location
+    -> from project p join dept l
+    -> order by budget
+    -> where location="New Delhi";
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'where location="New Delhi"' at line 4
+mysql> select p.budget, l.location
+    -> from project p join dept l
+    -> where location="New Delhi"
+    -> order by budget ;
++----------+-----------+
+| budget   | location  |
++----------+-----------+
+| 20000.54 | New Delhi |
+| 29000.45 | New Delhi |
+| 33000.40 | New Delhi |
+| 40000.42 | New Delhi |
+| 47000.24 | New Delhi |
++----------+-----------+
+5 rows in set (0.00 sec)
+
+mysql> select p.projectName, p.budget, l.location
+    -> from project p join dept l
+    -> where location="New Delhi"
+    -> order by budget ;
++--------------+----------+-----------+
+| projectName  | budget   | location  |
++--------------+----------+-----------+
+| Java Desktop | 20000.54 | New Delhi |
+| AWS          | 29000.45 | New Delhi |
+| PHP          | 33000.40 | New Delhi |
+| Java Web     | 40000.42 | New Delhi |
+| Python       | 47000.24 | New Delhi |
++--------------+----------+-----------+
+5 rows in set (0.00 sec)
+
+mysql> select p.projectName, p.budget, l.location
+    -> from project p join dept l
+    -> where location="Chennai"
+    -> order by budget ;
++--------------+----------+----------+
+| projectName  | budget   | location |
++--------------+----------+----------+
+| Java Desktop | 20000.54 | Chennai  |
+| AWS          | 29000.45 | Chennai  |
+| PHP          | 33000.40 | Chennai  |
+| Java Web     | 40000.42 | Chennai  |
+| Python       | 47000.24 | Chennai  |
++--------------+----------+----------+
+5 rows in set (0.00 sec)
+
+mysql> select e.ename, d.dname, e.designation
+    -> from emp e join dept d
+    -> where designation="Senior Developer";
++---------+-----------+------------------+
+| ename   | dname     | designation      |
++---------+-----------+------------------+
+| Swapnil | Sales     | Senior Developer |
+| Krishna | Sales     | Senior Developer |
+| Swapnil | Marketing | Senior Developer |
+| Krishna | Marketing | Senior Developer |
+| Swapnil | Finance   | Senior Developer |
+| Krishna | Finance   | Senior Developer |
++---------+-----------+------------------+
+6 rows in set (0.00 sec)
+
+mysql>
+mysql>
+mysql>
+mysql> select project, count(*)
+    -> from emp
+    -> group by project;
+ERROR 1054 (42S22): Unknown column 'project' in 'field list'
+mysql> select count(*)
+    -> from project
+    -> join dept
+    -> where location="Chennai";
++----------+
+| count(*) |
++----------+
+|        5 |
++----------+
+1 row in set (0.00 sec)
+
+mysql> select dept, sum(salary)
+    -> from emp
+    -> group by dname;
+ERROR 1054 (42S22): Unknown column 'dept' in 'field list'
+mysql> select dname, sum(salary)
+    -> from emp
+    -> group by dname;
+ERROR 1054 (42S22): Unknown column 'dname' in 'field list'
+mysql> select dname, sum(salary)
+    -> from emp join dept
+    -> group by dname;
++-----------+-------------+
+| dname     | sum(salary) |
++-----------+-------------+
+| Finance   |   710734.98 |
+| Marketing |   710734.98 |
+| Sales     |   710734.98 |
++-----------+-------------+
+3 rows in set (0.00 sec)
+
+mysql> select sum(e.salary), sum(p.budget), d.dname
+    -> from emp e join project p join dept d;
++---------------+---------------+-------+
+| sum(e.salary) | sum(p.budget) | dname |
++---------------+---------------+-------+
+|   10661024.77 |    5070061.41 | Sales |
++---------------+---------------+-------+
+1 row in set (0.00 sec)
+
+mysql> select sum(e.salary), sum(p.budget), d.dname
+    -> from emp e join project p join dept d
+    -> group by dname;
++---------------+---------------+-----------+
+| sum(e.salary) | sum(p.budget) | dname     |
++---------------+---------------+-----------+
+|    3553674.92 |    1690020.47 | Sales     |
+|    3553674.92 |    1690020.47 | Marketing |
+|    3553674.92 |    1690020.47 | Finance   |
++---------------+---------------+-----------+
+3 rows in set (0.00 sec)
+
+mysql> select sum(e.salary), sum(p.budget), d.dname
+    -> from emp e join project p join dept d
+    -> group by dept;
+ERROR 1054 (42S22): Unknown column 'dept' in 'group statement'
+mysql> select sum(e.salary), sum(p.budget), d.dname
+    -> from emp e join project p join dept d
+    -> group by dept
+    -> ;
+ERROR 1054 (42S22): Unknown column 'dept' in 'group statement'
+mysql> select dept, sum(salary) AS "Total Expenditure"
+    -> from emp
+    -> group by dept;
+ERROR 1054 (42S22): Unknown column 'dept' in 'field list'
+mysql> select sum(e.salary) AS "Total Salary", sum(p.budget) AS "Total Project Budget", d.dname
+    -> from emp e join project p join dept d
+    -> group by dname;
++--------------+----------------------+-----------+
+| Total Salary | Total Project Budget | dname     |
++--------------+----------------------+-----------+
+|   3553674.92 |           1690020.47 | Sales     |
+|   3553674.92 |           1690020.47 | Marketing |
+|   3553674.92 |           1690020.47 | Finance   |
++--------------+----------------------+-----------+
+3 rows in set (0.00 sec)
+
+mysql> update project p join dept d
+    -> set p.budget= p.budget+p.budget*5/100
+    -> where d.location="New Delhi";
+Query OK, 5 rows affected (0.00 sec)
+Rows matched: 5  Changed: 5  Warnings: 0
+
+mysql> select * from project;
++-----+--------------+----------+--------------+-------------+
+| pno | projectName  | budget   | departmentId | hoursNeeded |
++-----+--------------+----------+--------------+-------------+
+| P01 | Java Desktop | 21000.57 | D01          |        NULL |
+| P02 | Java Web     | 42000.44 | D02          |        NULL |
+| P03 | PHP          | 34650.42 | D01          |        NULL |
+| P04 | Python       | 49350.25 | D03          |        NULL |
+| P05 | AWS          | 30450.47 | D03          |        NULL |
++-----+--------------+----------+--------------+-------------+
+5 rows in set (0.00 sec)
+
+mysql> select e.ename, d.location, p.projectName
+    -> from emp e join dept d join project p
+    -> where location="Chennai"
+    -> project ="Java desktop";\
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'project ="Java desktop"' at line 4
+mysql> select e.ename, d.location, p.projectName
+    -> from emp e join dept d join project p
+    -> where location="Chennai"
+    -> where projectName like'%java';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'where projectName like'%java'' at line 4
+mysql> from emp e join dept d join project p
+    -> where location="Chennai";
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'from emp e join dept d join project p
+where location="Chennai"' at line 1
+mysql> select e.ename, d.location, p.projectName
+    -> from emp e join dept d join project p
+    -> where projectName like'%java';
+Empty set (0.00 sec)
+
+mysql> select e.ename, d.location, p.projectName
+    -> from emp e join dept d join project p
+    -> where projectName like'java%';
++-----------+-----------+--------------+
+| ename     | location  | projectName  |
++-----------+-----------+--------------+
+| Prithwish | Chennai   | Java Desktop |
+| Prithwish | Chennai   | Java Web     |
+| Prithwish | Mumbai    | Java Desktop |
+| Prithwish | Mumbai    | Java Web     |
+| Prithwish | New Delhi | Java Desktop |
+| Prithwish | New Delhi | Java Web     |
+| Sonu      | Chennai   | Java Desktop |
+| Sonu      | Chennai   | Java Web     |
+| Sonu      | Mumbai    | Java Desktop |
+| Sonu      | Mumbai    | Java Web     |
+| Sonu      | New Delhi | Java Desktop |
+| Sonu      | New Delhi | Java Web     |
+| Sweety    | Chennai   | Java Desktop |
+| Sweety    | Chennai   | Java Web     |
+| Sweety    | Mumbai    | Java Desktop |
+| Sweety    | Mumbai    | Java Web     |
+| Sweety    | New Delhi | Java Desktop |
+| Sweety    | New Delhi | Java Web     |
+| Krishna   | Chennai   | Java Desktop |
+| Krishna   | Chennai   | Java Web     |
+| Krishna   | Mumbai    | Java Desktop |
+| Krishna   | Mumbai    | Java Web     |
+| Krishna   | New Delhi | Java Desktop |
+| Krishna   | New Delhi | Java Web     |
+| Sweta     | Chennai   | Java Desktop |
+| Sweta     | Chennai   | Java Web     |
+| Sweta     | Mumbai    | Java Desktop |
+| Sweta     | Mumbai    | Java Web     |
+| Sweta     | New Delhi | Java Desktop |
+| Sweta     | New Delhi | Java Web     |
+| Roystan   | Chennai   | Java Desktop |
+| Roystan   | Chennai   | Java Web     |
+| Roystan   | Mumbai    | Java Desktop |
+| Roystan   | Mumbai    | Java Web     |
+| Roystan   | New Delhi | Java Desktop |
+| Roystan   | New Delhi | Java Web     |
+| Ayan      | Chennai   | Java Desktop |
+| Ayan      | Chennai   | Java Web     |
+| Ayan      | Mumbai    | Java Desktop |
+| Ayan      | Mumbai    | Java Web     |
+| Ayan      | New Delhi | Java Desktop |
+| Ayan      | New Delhi | Java Web     |
+| Disha     | Chennai   | Java Desktop |
+| Disha     | Chennai   | Java Web     |
+| Disha     | Mumbai    | Java Desktop |
+| Disha     | Mumbai    | Java Web     |
+| Disha     | New Delhi | Java Desktop |
+| Disha     | New Delhi | Java Web     |
+| Swapnil   | Chennai   | Java Desktop |
+| Swapnil   | Chennai   | Java Web     |
+| Swapnil   | Mumbai    | Java Desktop |
+| Swapnil   | Mumbai    | Java Web     |
+| Swapnil   | New Delhi | Java Desktop |
+| Swapnil   | New Delhi | Java Web     |
+| Payal     | Chennai   | Java Desktop |
+| Payal     | Chennai   | Java Web     |
+| Payal     | Mumbai    | Java Desktop |
+| Payal     | Mumbai    | Java Web     |
+| Payal     | New Delhi | Java Desktop |
+| Payal     | New Delhi | Java Web     |
++-----------+-----------+--------------+
+60 rows in set (0.00 sec)
