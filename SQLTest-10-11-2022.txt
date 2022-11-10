@@ -1,0 +1,208 @@
+mysql> create table class
+    -> (cNo int ,
+    -> sName varchar(20) not null,
+    -> section varchar(2));
+ERROR 1046 (3D000): No database selected
+mysql> create database class;
+Query OK, 1 row affected (0.01 sec)
+
+mysql> use class;
+Database changed
+mysql> create table student
+    -> (sclass int ,
+    -> sName varchar(20) not null,
+    -> section varchar(2));
+Query OK, 0 rows affected (0.03 sec)
+
+mysql> describe class;\
+ERROR 1146 (42S02): Table 'class.class' doesn't exist
+mysql> describe class;
+ERROR 1146 (42S02): Table 'class.class' doesn't exist
+mysql> describe student;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| sclass  | int         | YES  |     | NULL    |       |
+| sName   | varchar(20) | NO   |     | NULL    |       |
+| section | varchar(2)  | YES  |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> insert into student values(
+    -> 10, "Prithwish", "B");
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into student values(
+    -> 11, "Rahul", "C");
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into student values(
+    -> 11, "Ravi", "D");
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into student values(
+    -> 12, "Shyam", "A");
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from student;
++--------+-----------+---------+
+| sclass | sName     | section |
++--------+-----------+---------+
+|     10 | Prithwish | B       |
+|     11 | Rahul     | C       |
+|     11 | Ravi      | D       |
+|     12 | Shyam     | A       |
++--------+-----------+---------+
+4 rows in set (0.00 sec)
+
+mysql> create table marks;
+ERROR 4028 (HY000): A table must have at least one visible column.
+mysql> create table marks(
+    -> Physics float(2,1),
+    -> Chemistry float(2,1),
+    -> Biology float(2,1),
+    -> Maths float(2,1),
+    -> Computer float(2,1));
+Query OK, 0 rows affected, 5 warnings (0.01 sec)
+
+mysql> describe marks;
++-----------+------------+------+-----+---------+-------+
+| Field     | Type       | Null | Key | Default | Extra |
++-----------+------------+------+-----+---------+-------+
+| Physics   | float(2,1) | YES  |     | NULL    |       |
+| Chemistry | float(2,1) | YES  |     | NULL    |       |
+| Biology   | float(2,1) | YES  |     | NULL    |       |
+| Maths     | float(2,1) | YES  |     | NULL    |       |
+| Computer  | float(2,1) | YES  |     | NULL    |       |
++-----------+------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> insert into marks values(
+    -> 54,45.5,78.2,41,87);
+ERROR 1264 (22003): Out of range value for column 'Physics' at row 1
+mysql> insert into marks values(
+    -> 54.3,45.5,78.2,41,87);
+ERROR 1264 (22003): Out of range value for column 'Physics' at row 1
+mysql> alter table marks
+    -> add class int;
+Query OK, 0 rows affected (0.01 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> describe marks;
++-----------+------------+------+-----+---------+-------+
+| Field     | Type       | Null | Key | Default | Extra |
++-----------+------------+------+-----+---------+-------+
+| Physics   | float(2,1) | YES  |     | NULL    |       |
+| Chemistry | float(2,1) | YES  |     | NULL    |       |
+| Biology   | float(2,1) | YES  |     | NULL    |       |
+| Maths     | float(2,1) | YES  |     | NULL    |       |
+| Computer  | float(2,1) | YES  |     | NULL    |       |
+| class     | int        | YES  |     | NULL    |       |
++-----------+------------+------+-----+---------+-------+
+6 rows in set (0.00 sec)
+
+mysql> insert into marks values(
+    -> 54,45.5,78.2,41,87,10);
+ERROR 1264 (22003): Out of range value for column 'Physics' at row 1
+mysql> insert into marks values(
+    -> 4,45.5,78.2,41,87,10);
+ERROR 1264 (22003): Out of range value for column 'Chemistry' at row 1
+mysql> insert into marks values(
+    -> 4,4.5,7.2,4,8,10);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select *from class;
+ERROR 1146 (42S02): Table 'class.class' doesn't exist
+mysql> select *from marks;
++---------+-----------+---------+-------+----------+-------+
+| Physics | Chemistry | Biology | Maths | Computer | class |
++---------+-----------+---------+-------+----------+-------+
+|     4.0 |       4.5 |     7.2 |   4.0 |      8.0 |    10 |
++---------+-----------+---------+-------+----------+-------+
+1 row in set (0.00 sec)
+
+mysql> insert into marks values(
+    -> 5,4.5,6.2,8,9.3,10);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into marks values(
+    -> 7,8.5,9.4,9.3,4.1,10);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into marks values(
+    -> 7,8,4,3,4,11);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into marks values(
+    -> 1,7,2.4,8.3,3.4,11);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into marks values(
+    -> 1,7,2.4,8.3,3.4,12);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> insert into marks values(
+    -> 7,8.5,9.4,9.3,4.1,12);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> select * from marks;
++---------+-----------+---------+-------+----------+-------+
+| Physics | Chemistry | Biology | Maths | Computer | class |
++---------+-----------+---------+-------+----------+-------+
+|     4.0 |       4.5 |     7.2 |   4.0 |      8.0 |    10 |
+|     5.0 |       4.5 |     6.2 |   8.0 |      9.3 |    10 |
+|     7.0 |       8.5 |     9.4 |   9.3 |      4.1 |    10 |
+|     7.0 |       8.0 |     4.0 |   3.0 |      4.0 |    11 |
+|     1.0 |       7.0 |     2.4 |   8.3 |      3.4 |    11 |
+|     1.0 |       7.0 |     2.4 |   8.3 |      3.4 |    12 |
+|     7.0 |       8.5 |     9.4 |   9.3 |      4.1 |    12 |
++---------+-----------+---------+-------+----------+-------+
+7 rows in set (0.00 sec)
+
+mysql> describe student;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| sclass  | int         | YES  |     | NULL    |       |
+| sName   | varchar(20) | NO   |     | NULL    |       |
+| section | varchar(2)  | YES  |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> select student.sName,student.section,marks.physics,marks.chemistry,marks.biology,marks.maths,marks.computer
+    -> from student
+    -> INNER JOIN marks
+    -> ON student.sclass=marks.class;
++-----------+---------+---------+-----------+---------+-------+----------+
+| sName     | section | physics | chemistry | biology | maths | computer |
++-----------+---------+---------+-----------+---------+-------+----------+
+| Prithwish | B       |     4.0 |       4.5 |     7.2 |   4.0 |      8.0 |
+| Prithwish | B       |     5.0 |       4.5 |     6.2 |   8.0 |      9.3 |
+| Prithwish | B       |     7.0 |       8.5 |     9.4 |   9.3 |      4.1 |
+| Ravi      | D       |     7.0 |       8.0 |     4.0 |   3.0 |      4.0 |
+| Rahul     | C       |     7.0 |       8.0 |     4.0 |   3.0 |      4.0 |
+| Ravi      | D       |     1.0 |       7.0 |     2.4 |   8.3 |      3.4 |
+| Rahul     | C       |     1.0 |       7.0 |     2.4 |   8.3 |      3.4 |
+| Shyam     | A       |     1.0 |       7.0 |     2.4 |   8.3 |      3.4 |
+| Shyam     | A       |     7.0 |       8.5 |     9.4 |   9.3 |      4.1 |
++-----------+---------+---------+-----------+---------+-------+----------+
+9 rows in set (0.00 sec)
+
+mysql> select student.section,marks.physics,marks.chemistry
+    -> from student
+    -> RIGHT JOIN marks
+    -> ON student.sclass=marks.class;
++---------+---------+-----------+
+| section | physics | chemistry |
++---------+---------+-----------+
+| B       |     4.0 |       4.5 |
+| B       |     5.0 |       4.5 |
+| B       |     7.0 |       8.5 |
+| D       |     7.0 |       8.0 |
+| C       |     7.0 |       8.0 |
+| D       |     1.0 |       7.0 |
+| C       |     1.0 |       7.0 |
+| A       |     1.0 |       7.0 |
+| A       |     7.0 |       8.5 |
++---------+---------+-----------+
+9 rows in set (0.00 sec)
